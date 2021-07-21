@@ -1,20 +1,70 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+  <div class="fullScreen">
+    <div class="walletSection">
+      <div class="inExSection">
+        <div>
+          <h2>₹ {{income + '.00'}}</h2>
+          <p>Income</p>
+        </div>
+        <div>
+          <h2>₹ {{expense + '.00'}}</h2>
+          <p>Expense</p>
+        </div>
+      </div>
+      <div class="totalBalance">
+        <h2>₹ {{total + '.00'}}</h2>
+        <p> Total Balance</p>
+      </div>
+    </div>
+    <div class="chart">
+      <canvas baseChart [height]="200" [data]="pieChartData" [labels]="pieChartLabels" [chartType]="chartType"
+        [options]="pieChartOptions" [colors]="pieChartColors" [legend]="pieChartLegend">
+      </canvas>
+      <ion-button color="secondary" size="small" fill="outline" (click)="chartToggle()">{{chartType}}</ion-button>
+    </div>
+    <div class="content">
+      <div class="accessibilityIcons">
+        <div class="cards">
+          <div class="icons" title="Add" [routerLink]="['/transaction/new']">
+            <ion-icon name="add-outline"></ion-icon>
+            <p>New Trans</p>
+          </div>
+          <div class="icons" title="Database Sync">
+            <ion-icon name="sync-outline"></ion-icon>
+            <p>DB Sync</p>
+          </div>
+          <div class="icons" title="Download PDF / XLS">
+            <ion-icon name="download-outline"></ion-icon>
+            <p>Download</p>
+          </div>
+          <div class="icons" title="Filter" (click)="filterPopover()">
+            <ion-icon name="filter-outline"></ion-icon>
+            <p>Filter</p>
+          </div>
+        </div>
+      </div>
+      <div class="recentTransactions">
+        <h4 class="primary">
+          <span class="border">Recent Transactions</span>
+        </h4>
+        <div *ngFor="let trans of transactions; let i = index;" class="transactions">
+          <div class="transaction">
+            <div class="transHeader">
+              <div class="dateSection"><span class="date">{{trans?.date?.date}}</span> <span
+                  class="badge primary">{{trans?.date?.day}}</span> <span>{{trans?.date?.year}}</span>,
+                <span>{{trans?.date?.month}}</span>
+              </div>
+              <div class="primary">₹ {{(trans?.type === 'INCOME') ? trans?.amount + '.00' : '0.00'}}</div>
+              <div class="danger">₹ {{(trans?.type === 'EXPENSE') ? trans?.amount + '.00' : '0.00'}}</div>
+            </div>
+            <div class="transContent" [routerLink]="['/transaction/update', trans?.id]">
+              <div>{{trans?.category}}</div>
+              <div>{{(trans?.reason?.length > 20) ? trans?.reason?.slice(0, 20) +'...' : trans?.reason}}</div>
+              <div [ngClass]="trans?.type === 'INCOME' ? 'primary' : 'danger'">₹ {{trans?.amount + '.00'}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </ion-content>
